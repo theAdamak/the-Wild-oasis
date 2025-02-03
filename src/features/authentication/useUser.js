@@ -3,7 +3,7 @@ import { getCurrentUser } from "../../services/apiAuth";
 
 export async function useUser() {
   const { isLoading, data: user } = useQuery({
-    queryKey: "user",
+    queryKey: ["user"],
     queryFn: getCurrentUser,
   });
   return { isLoading, user, isAuthenticated: user?.role === "authenticated" };
