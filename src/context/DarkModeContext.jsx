@@ -4,7 +4,10 @@ import { useLocalStorageState } from "../hooks/useLocalStorageState";
 const DarkModeContext = createContext();
 
 function DarkModeProvider({ children }) {
-  const [isDarkMode, setIsDarkMode] = useLocalStorageState(false, "isDarkMode");
+  const [isDarkMode, setIsDarkMode] = useLocalStorageState(
+    window.matchMedia("(prefers-color-scheme: dark)").matches,
+    "isDarkMode"
+  );
 
   function toggleDarkMode() {
     setIsDarkMode((isDark) => !isDark);
@@ -29,7 +32,7 @@ function DarkModeProvider({ children }) {
   );
 }
 
-function UseDarkMode() {
+function useDarkMode() {
   const context = useContext(DarkModeContext);
   if (context === undefined) {
     throw new Error("useDarkMode must be used within a DarkModeProvider");
@@ -37,4 +40,4 @@ function UseDarkMode() {
   return context;
 }
 
-export { DarkModeProvider, UseDarkMode };
+export { DarkModeProvider, useDarkMode };
