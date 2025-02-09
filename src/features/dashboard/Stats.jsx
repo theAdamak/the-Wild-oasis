@@ -1,56 +1,60 @@
-import {
-  HiOutlineBriefcase,
-  HiOutlineCalendarDays,
-  HiOutlineBanknotes,
-  HiOutlineChartBar,
-} from 'react-icons/hi2';
-import { formatCurrency } from 'utils/helpers';
-import Stat from './Stat';
+import styled from "styled-components";
 
-function Stats({ bookings, confirmedStays, numDays, cabinCount }) {
-  // Stat 1)
-  const numBookings = bookings.length;
+const StyledStat = styled.div`
+  /* Box */
+  background-color: var(--color-grey-0);
+  border: 1px solid var(--color-grey-100);
+  border-radius: var(--border-radius-md);
 
-  // Stat 2)
-  const sales = bookings.reduce((acc, cur) => acc + cur.totalPrice, 0);
+  padding: 1.6rem;
+  display: grid;
+  grid-template-columns: 6.4rem 1fr;
+  grid-template-rows: auto auto;
+  column-gap: 1.6rem;
+  row-gap: 0.4rem;
+`;
 
-  // Stat 3)
-  const checkins = confirmedStays.length;
+const Icon = styled.div`
+  grid-row: 1 / -1;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  // Stat 4)
-  // We will use a trick to calculate occupancy rate. It's not 100% accurate, but we want to keep it simple. We know we can have a total of 'numDays * cabinCount' days to occupy, and we also know how many days were actually booked. From this, we can compute the percentage
-  const occupation =
-    confirmedStays.reduce((acc, cur) => acc + cur.numNights, 0) /
-    (numDays * cabinCount);
+  /* Make these dynamic, based on the received prop */
+  background-color: var(--color-${(props) => props.color}-100);
 
+  & svg {
+    width: 3.2rem;
+    height: 3.2rem;
+    color: var(--color-${(props) => props.color}-700);
+  }
+`;
+
+const Title = styled.h5`
+  align-self: end;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  font-weight: 600;
+  color: var(--color-grey-500);
+`;
+
+const Value = styled.p`
+  font-size: 2.4rem;
+  line-height: 1;
+  font-weight: 500;
+`;
+
+function Stat({ icon, title, value, color }) {
   return (
-    <>
-      <Stat
-        icon={<HiOutlineBriefcase />}
-        title='Bookings'
-        value={numBookings}
-        color='blue'
-      />
-      <Stat
-        icon={<HiOutlineBanknotes />}
-        title='Sales'
-        value={formatCurrency(sales)}
-        color='green'
-      />
-      <Stat
-        icon={<HiOutlineCalendarDays />}
-        title='Check ins'
-        value={checkins}
-        color='indigo'
-      />
-      <Stat
-        icon={<HiOutlineChartBar />}
-        title='Occupancy rate'
-        value={Math.round(occupation * 100) + '%'}
-        color='yellow'
-      />
-    </>
+    <StyledStat>
+      <Icon color={color}>{icon}</Icon>
+      <Title>{title}</Title>
+      <Value>{value}</Value>
+    </StyledStat>
   );
 }
 
-export default Stats;
+export default Stat;
